@@ -1,5 +1,6 @@
 rootProject.name = 'msa'
 include 'config-server'
+include 'eureka-server'
 include 'api-common'
 include 'accommodation-service'
 include 'member-service'

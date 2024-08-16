@@ -1,4 +1,4 @@
-package com.fp.configserver.security;
+package com.fp.eurekaserver.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
@@ -34,12 +35,12 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
 
-        UserDetails admin = User.builder()
+        UserDetails user = User.builder()
             .username("admin")
-            .password(passwordEncoder().encode("admin"))
+            .password(bCryptPasswordEncoder().encode("admin"))
             .roles("ADMIN")
             .build();
 
-        return new InMemoryUserDetailsManager(admin);
+        return new InMemoryUserDetailsManager(user);
     }
 }
