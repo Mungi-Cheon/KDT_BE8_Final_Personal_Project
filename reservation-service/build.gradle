@@ -8,10 +8,11 @@ dependencies {
     implementation project(':api-common')
 //		implementation(testFixtures(project(":api-common")))
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.register("prepareKotlinBuildScriptModel"){}
+tasks.register("prepareKotlinBuildScriptModel") {}

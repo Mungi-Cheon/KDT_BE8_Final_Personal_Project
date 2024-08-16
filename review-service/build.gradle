@@ -7,10 +7,12 @@ configurations {
 dependencies {
     implementation project(':api-common')
 //		implementation(testFixtures(project(":api-common")))
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.register("prepareKotlinBuildScriptModel"){}
+tasks.register("prepareKotlinBuildScriptModel") {}

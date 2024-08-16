@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: accommodation
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://admin:admin@localhost:9000
