@@ -1,0 +1,8 @@
+rootProject.name = 'msa'
+include 'config-server'
+include 'api-common'
+include 'accommodation-service'
+include 'member-service'
+include 'reservation-service'
+include 'review-service'
+include 'room-service'
