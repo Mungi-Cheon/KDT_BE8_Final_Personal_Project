@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: accommodation
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://admin:admin@localhost:9000
+
+eureka:
+  client:
+    register-with-eureka: true #Eureka 서버에 등록할지 여부
+    fetch-registry: true #Eureka 서버의 정보를 가져올지 여부
+    service-url:
+      defaultZone: http://admin:admin@localhost:8761/eureka
