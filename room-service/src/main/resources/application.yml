@@ -1,6 +1,6 @@
 spring:
   application:
-    name: accommodation
+    name: room
   profiles:
     active: dev
   config:
