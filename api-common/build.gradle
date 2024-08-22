@@ -33,3 +33,11 @@ tasks.named('test') {
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}
+
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
+}
