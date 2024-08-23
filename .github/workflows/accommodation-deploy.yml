@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'accommodation-service/**'
+      - 'accommodation-deploy.yml'
 
 jobs:
   build:
