@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'gateway-service/**'
+      - 'gateway-deploy.yml'
 
 jobs:
   build:

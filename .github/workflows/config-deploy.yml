@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'config-server/**'
+      - 'config-deploy.yml'
 
 jobs:
   build:
