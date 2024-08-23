@@ -1,0 +1,5 @@
+server.port=9000
+spring.application.name=config-server
+spring.cloud.config.server.git.uri= #config server 설정이 있는 github repository uri를 설정
+spring.cloud.config.server.git.ignoreLocalSshSettings=true
+spring.cloud.config.server.git.private-key= #ssh key 설정
