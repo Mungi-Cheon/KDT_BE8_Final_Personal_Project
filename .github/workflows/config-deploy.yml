@@ -50,6 +50,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
+
       - name: set environment variables
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -73,7 +76,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           port: ${{ secrets.EC2_SSH_PORT }}
           source: "./config-server/docker-compose.yml"
-          target: "/home/config/docker-compose.yml"
+          target: "/home/config"
 
       - name: Deploy application with Docker Compose
         uses: appleboy/ssh-action@v0.1.6

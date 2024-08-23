@@ -74,7 +74,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           port: ${{ secrets.EC2_SSH_PORT }}
           source: "./accommodation-service/docker-compose.yml"
-          target: "/home/accommodation/docker-compose.yml"
+          target: "/home/accommodation"
 
       - name: Deploy application with Docker Compose
         uses: appleboy/ssh-action@v0.1.6
