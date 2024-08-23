@@ -1,0 +1,27 @@
+name: gateway server CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'gateway-service/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
+
+      - name: Run Tests with Gradle [--parallel]
+        run: ./gradlew :gateway-service:build -x test

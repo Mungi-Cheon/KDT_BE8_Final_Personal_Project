@@ -1,0 +1,12 @@
+services:
+  app:
+    image: mgcheon/final-accommodation:latest
+    container_name: accommodation-service
+    env_file:
+      - /home/accommodation/.env  # .env 파일에서 환경 변수를 로드
+    networks:
+      - service-network
+
+networks:
+  service-network:
+    driver: bridge
