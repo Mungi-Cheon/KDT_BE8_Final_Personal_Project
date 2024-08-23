@@ -72,7 +72,8 @@ jobs:
         env:
           EC2_KEY: ${{secrets.EC2_KEY}}
         run: |
-          echo "$EC2_KEY" > /home/config/ec2_key.pem
+          cd /home/config
+          echo "$EC2_KEY" >> ec2_key.pem
           chmod 600 ec2_key.pem
           scp -i ec2-key.pem ./config-server/docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/config/
           rm ec2_key.pem
