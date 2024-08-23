@@ -69,7 +69,7 @@ jobs:
             echo "CONFIG_GIT_PRIVATE_KEY=${{secrets.CONFIG_GIT_PRIVATE_KEY}}" >> /home/config/.env
 
       - name: Copy docker-compose.yml to EC2
-        uses: appleboy/scp-action@v0.1.3
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
