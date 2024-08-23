@@ -28,7 +28,7 @@ jobs:
       - name: 테스트 환경변수 설정
         uses: microsoft/variable-substitution@v1
         with:
-          files: ./src/test/resources/application-test.yml
+          files: ./accommodation-service/src/test/resources/application-test.yml
         env:
           spring.application.name: ${{secrets.ACCOMMODATION_APP_NAME}}
           spring.profiles.active: ${{secrets.APP_PROFILE}}
