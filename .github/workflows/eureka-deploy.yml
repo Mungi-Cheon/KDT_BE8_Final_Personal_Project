@@ -1,10 +1,11 @@
 name: eureka server CD
 
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
     paths:
       - 'eureka-server/**'
+      - 'eureka-deploy.yml'
 
 jobs:
   build:
