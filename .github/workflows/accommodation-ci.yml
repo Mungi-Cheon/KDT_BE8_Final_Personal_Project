@@ -1,0 +1,47 @@
+name: accommodation service CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'accommodation-service/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 [temurin(Oracle)]
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      #      - name: Start Redis
+      #        uses: supercharge/redis-github-action@1.7.0
+      #        with:
+      #          redis-version: 7
+
+      - name: 테스트 환경변수 설정
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./accommodation-service/src/test/resources/application-test.yml
+        env:
+          spring.application.name: ${{secrets.ACCOMMODATION_APP_NAME}}
+          spring.profiles.active: ${{secrets.APP_PROFILE}}
+          spring.config.import: ${{secrets.CONFIG_SERVER_URI}}
+          eureka.client.register-with-eureka: ${{secrets.ACCOMMODATION_REGISTER_WITH_EUREKA}}
+          eureka.client.fetch-registry: ${{secrets.ACCOMMODATION_EUREKA_FETCH_REGISTRY}}
+          eureka.client.service-url.defaultZone: ${{secrets.EUREKA_SERVER_URI}}
+
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
+
+      - name: Run Tests with Gradle [--parallel]
+        run: ./gradlew :accommodation-service:build -x test
+
+#      - name: Run Tests with Gradle [--parallel]
+#        run: ./gradlew :accommodation-service:build --info --parallel test

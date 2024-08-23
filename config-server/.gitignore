@@ -3,8 +3,12 @@
 
 ### yml ###
 *.yml
-*.yaml
 *.properties
+
+!*prod.yml
+!*test.yml
+!*prod.properties
+!docker-compose.yml
 
 ### Java ###
 # Compiled class file

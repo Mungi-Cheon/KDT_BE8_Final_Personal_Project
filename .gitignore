@@ -4,10 +4,6 @@
 ### MD ###
 HELP.md
 
-### yml ###
-*.yml
-*.yaml
-
 ### Java ###
 # Compiled class file
 *.class

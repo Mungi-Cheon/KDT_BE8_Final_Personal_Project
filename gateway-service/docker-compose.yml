@@ -1,0 +1,12 @@
+services:
+  app:
+    image: mgcheon/final-gateway:latest
+    container_name: gateway-service
+    env_file:
+      - /home/gateway/.env  # .env 파일에서 환경 변수를 로드
+    networks:
+      - service-network
+
+networks:
+  service-network:
+    driver: bridge
