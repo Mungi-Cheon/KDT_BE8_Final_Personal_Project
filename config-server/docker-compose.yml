@@ -3,7 +3,7 @@ services:
     image: mgcheon/final-config:latest
     container_name: config-service
     env_file:
-      - /home/config/.env  # .env 파일에서 환경 변수를 로드
+      - /home/config-server/.env  # .env 파일에서 환경 변수를 로드
     networks:
       - service-network
 

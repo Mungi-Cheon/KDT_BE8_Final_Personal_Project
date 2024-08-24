@@ -6,8 +6,6 @@ on:
       - develop
     paths:
       - 'eureka-server/**'
-      - 'eureka-ci.yml'
-      - 'eureka-deploy.yml'
 jobs:
   build:
     runs-on: ubuntu-latest
