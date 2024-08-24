@@ -1,5 +1,7 @@
 package com.fp.eurekaserver.security;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -14,8 +16,15 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${eureka.username}")
+    private String username;
+
+    @Value("${eureka.password}")
+    private String password;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -36,8 +45,8 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
 
         UserDetails user = User.builder()
-            .username("admin")
-            .password(bCryptPasswordEncoder().encode("admin"))
+            .username(username)
+            .password(bCryptPasswordEncoder().encode(password))
             .roles("ADMIN")
             .build();
 

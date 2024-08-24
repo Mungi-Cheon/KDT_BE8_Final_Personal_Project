@@ -6,8 +6,6 @@ on:
       - develop
     paths:
       - 'gateway-service/**'
-      - 'gateway-ci.yml'
-      - 'gateway-deploy.yml'
 jobs:
   build:
     runs-on: ubuntu-latest

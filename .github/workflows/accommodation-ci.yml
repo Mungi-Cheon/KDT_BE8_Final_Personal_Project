@@ -6,8 +6,6 @@ on:
       - develop
     paths:
       - 'accommodation-service/**'
-      - 'accommodation-ci.yml'
-      - 'accommodation-deploy.yml'
 
 jobs:
   build:

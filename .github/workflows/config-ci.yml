@@ -6,8 +6,6 @@ on:
       - develop
     paths:
       - 'config-server/**'
-      - 'config-ci.yml'
-      - 'config-deploy.yml'
 jobs:
   build:
     runs-on: ubuntu-latest
