@@ -1,5 +1,11 @@
 server:
   port: ${EUREKA_SERVER_PORT}
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
 eureka:
   client:
     register-with-eureka: ${EUREKA_CLIENT_REGISTER_WITH_EUREKA} #Eureka 서버에 등록할지 여부

@@ -1,7 +1,7 @@
 name: eureka server CD
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
     paths:
       - 'eureka-server/**'

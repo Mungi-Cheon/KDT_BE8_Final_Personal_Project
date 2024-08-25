@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: ${GATEWAY_APP_NAME}
+  profiles:
+    active: ${APP_PROFILE}
+  config:
+    import: ${CONFIG_SERVER_URI}
+
+eureka:
+  client:
+    register-with-eureka: ${GATEWAY_REGISTER_WITH_EUREKA} #Eureka 서버에 등록할지 여부
+    fetch-registry: ${GATEWAY_EUREKA_FETCH_REGISTRY} #Eureka 서버의 정보를 가져올지 여부
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URI}
+
+# actuator
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
