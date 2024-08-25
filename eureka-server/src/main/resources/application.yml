@@ -15,9 +15,3 @@ eureka:
     waitTimeInMsWhenSyncEmpty: 0
   username: ${EUREKA_USERNAME}
   password: ${EUREKA_PASSWORD}
-  
-management:
-  endpoints:
-    web:
-      exposure:
-        include: *
