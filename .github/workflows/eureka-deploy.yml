@@ -60,6 +60,8 @@ jobs:
           timeout: 60s
           script: |
             echo "EUREKA_SERVER_PORT=${{secrets.EUREKA_SERVER_PORT}}" >> /home/eureka-server/.env
+            echo "EC2_HOST=${{secrets.EC2_HOST}}" >> /home/eureka-server/.env
+            echo "EUREKA_PREFER_IP_ADDRESS=${{secrets.EUREKA_PREFER_IP_ADDRESS}}" >> /home/eureka-server/.env            
             echo "EUREKA_CLIENT_REGISTER_WITH_EUREKA=${{secrets.EUREKA_CLIENT_REGISTER_WITH_EUREKA}}" >> /home/eureka-server/.env
             echo "EUREKA_FETCH_REGISTRY=${{secrets.EUREKA_FETCH_REGISTRY}}" >> /home/eureka-server/.env
             echo "EUREKA_USERNAME=${{secrets.EUREKA_USERNAME}}" >> /home/eureka-server/.env
