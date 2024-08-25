@@ -2,12 +2,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,java,macos,gradle
 
 ### yml ###
-*.yml
-*.properties
-
-!*prod.yml
+*dev.yml
+*dev.properties
 !*test.yml
-!*prod.properties
 !docker-compose.yml
 
 ### Java ###
