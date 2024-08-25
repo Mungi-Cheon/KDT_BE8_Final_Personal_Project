@@ -11,6 +11,9 @@ spring:
           uri: ${CONFIG_GIT_URI}
           ignore-local-ssh-settings: ${CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING}
           private-key: ${CONFIG_GIT_PRIVATE_KEY}
+  config:
+    activate:
+      on-profile: prod
 config:
   username: ${CONFIG_USERNAME}
   password: ${CONFIG_PASSWORD}
