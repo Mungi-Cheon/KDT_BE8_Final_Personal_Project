@@ -63,7 +63,7 @@ jobs:
             echo "EUREKA_CLIENT_REGISTER_WITH_EUREKA=${{secrets.EUREKA_CLIENT_REGISTER_WITH_EUREKA}}" >> /home/eureka-server/.env
             echo "EUREKA_FETCH_REGISTRY=${{secrets.EUREKA_FETCH_REGISTRY}}" >> /home/eureka-server/.env
             echo "EUREKA_USERNAME=${{secrets.EUREKA_USERNAME}}" >> /home/eureka-server/.env
-            echo "ERUEKA_PASSWORD=${{secrets.ERUEKA_PASSWORD}}" >> /home/eureka-server/.env
+            echo "EUREKA_PASSWORD=${{secrets.EUREKA_PASSWORD}}" >> /home/eureka-server/.env
 
 
       - name: Copy docker-compose.yml to EC2
