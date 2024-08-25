@@ -9,7 +9,7 @@ eureka:
     register-with-eureka: ${EUREKA_CLIENT_REGISTER_WITH_EUREKA} #Eureka 서버에 등록할지 여부
     fetch-registry: ${EUREKA_FETCH_REGISTRY} #Eureka 서버의 정보를 가져올지 여부
     service-url:
-      defaultZone: http://${eureka.instance.hostname:${server.port}/eureka/
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   server:
     response-cache-update-interval-ms: 5000
     waitTimeInMsWhenSyncEmpty: 0
