@@ -4,6 +4,8 @@ services:
     container_name: gateway-service
     env_file:
       - /home/gateway-service/.env  # .env 파일에서 환경 변수를 로드
+    ports:
+      - 8080:8080
     networks:
       - service-network
 

@@ -4,6 +4,8 @@ services:
     container_name: config-service
     env_file:
       - /home/config-server/.env  # .env 파일에서 환경 변수를 로드
+    ports:
+      - 9000:9000
     networks:
       - service-network
 
