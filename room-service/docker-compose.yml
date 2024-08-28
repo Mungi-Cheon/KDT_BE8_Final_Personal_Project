@@ -1,0 +1,14 @@
+services:
+  app:
+    image: mgcheon/final-room:latest
+    container_name: room-service
+    env_file:
+      - /home/room-server/.env  # .env 파일에서 환경 변수를 로드
+    ports:
+      - 8085:8085
+    networks:
+      - service-network
+
+networks:
+  service-network:
+    driver: bridge
