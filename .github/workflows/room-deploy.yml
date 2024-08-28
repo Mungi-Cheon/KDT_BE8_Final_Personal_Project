@@ -1,10 +1,10 @@
-name: accommodation server CD
+name: room server CD
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'accommodation-service/**'
+      - 'room-service/**'
 
 jobs:
   build:
@@ -25,11 +25,11 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle Wrapper
-        run: ./gradlew :accommodation-service:build -x test
+        run: ./gradlew :room-service:build -x test
 
       # Docker 이미지 build
       - name: docker image build
-        run: docker build -t ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_ACCOMMODATION_IMAGE_NAME}}  -f accommodation-service/Dockerfile accommodation-service/
+        run: docker build -t ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_ROOM_IMAGE_NAME}}  -f room-service/Dockerfile room-service/
 
       # DockerHub 로그인
       - name: docker login
@@ -40,7 +40,7 @@ jobs:
 
       # DockerHub push
       - name: docker Hub push
-        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_ACCOMMODATION_IMAGE_NAME}}:latest
+        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_ROOM_IMAGE_NAME}}:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,6 +49,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Delete .env and docker-compose
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          timeout: 60s
+          script: |
+            cd /home/room-service/
+            rm -f .env
+            rm -f docker-compose.yml
 
       - name: set environment variables
         uses: appleboy/ssh-action@v0.1.6
@@ -59,12 +72,12 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            echo "ACCOMMODATION_APP_NAME=${{secrets.ACCOMMODATION_APP_NAME}}" >> /home/accommodation-service/.env
-            echo "APP_PROFILE=${{secrets.APP_PROFILE}}" >> /home/accommodation-service/.env
-            echo "CONFIG_SERVER_URI=${{secrets.CONFIG_SERVER_URI}}" >> /home/accommodation-service/.env
-            echo "ACCOMMODATION_REGISTER_WITH_EUREKA=${{secrets.ACCOMMODATION_REGISTER_WITH_EUREKA}}" >> /home/accommodation-service/.env
-            echo "ACCOMMODATION_EUREKA_FETCH_REGISTRY=${{secrets.ACCOMMODATION_EUREKA_FETCH_REGISTRY}}" >> /home/accommodation-service/.env
-            echo "EUREKA_SERVER_URI=${{secrets.EUREKA_SERVER_URI}}" >> /home/accommodation-service/.env
+            echo "ROOM_APP_NAME=${{secrets.ROOM_APP_NAME}}" >> /home/room-service/.env
+            echo "APP_PROFILE=${{secrets.APP_PROFILE}}" >> /home/room-service/.env
+            echo "CONFIG_SERVER_URI=${{secrets.CONFIG_SERVER_URI}}" >> /home/room-service/.env
+            echo "ROOM_REGISTER_WITH_EUREKA=${{secrets.ROOM_REGISTER_WITH_EUREKA}}" >> /home/room-service/.env
+            echo "ROOM_EUREKA_FETCH_REGISTRY=${{secrets.ROOM_EUREKA_FETCH_REGISTRY}}" >> /home/room-service/.env
+            echo "EUREKA_SERVER_URI=${{secrets.EUREKA_SERVER_URI}}" >> /home/room-service/.env
 
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@v0.1.3
@@ -73,7 +86,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           port: ${{ secrets.EC2_SSH_PORT }}
-          source: "./accommodation-service/docker-compose.yml"
+          source: "./room-service/docker-compose.yml"
           target: "/home"
 
       - name: Deploy application with Docker Compose
@@ -85,7 +98,7 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            cd /home/accommodation-service/
+            cd /home/room-service/
             docker-compose down
             docker-compose pull
             docker-compose up -d
