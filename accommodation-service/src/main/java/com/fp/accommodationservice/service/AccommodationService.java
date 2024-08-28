@@ -2,14 +2,11 @@ package com.fp.accommodationservice.service;
 
 import com.fp.accommodationservice.dto.response.AccommodationResponse;
 import com.fp.accommodationservice.entity.Accommodation;
-import com.fp.accommodationservice.entity.RoomInfo;
 import com.fp.accommodationservice.exception.AccommodationException;
 import com.fp.accommodationservice.exception.ErrorType;
 import com.fp.accommodationservice.repository.AccommodationImageRepository;
 import com.fp.accommodationservice.repository.AccommodationRepository;
-import com.fp.accommodationservice.repository.RoomRepository;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccommodationService {
 
     private final AccommodationRepository accommodationRepository;
-    private final RoomRepository roomRepository;
     private final AccommodationImageRepository accommodationImageRepository;
     private static final int PAGE_SIZE = 8;
 
