@@ -99,12 +99,11 @@ public class AccommodationService {
 //            .allMatch(perNight -> perNight.getCount() > 0);
 //    }
 
-    private List<RoomInfo> findRoomBetweenDates(Long roomId, LocalDate checkIn,
-        LocalDate checkOut) {
-        // TODO kafka 이벤트 통신 accommodation service <--> room service
+//    private List<RoomInfo> findRoomBetweenDates(Long roomId, LocalDate checkIn,
+//        LocalDate checkOut) {
+//        // TODO kafka 이벤트 통신 accommodation service <--> room service
 //        return roomInfoRepository.findByRoomIdAndDateRange(roomId, checkIn, checkOut);
-        return new ArrayList<>();
-    }
+//    }
 
     private LocalDate validCheckInDate(LocalDate checkIn) {
         return checkIn == null ? LocalDate.now() : checkIn;
