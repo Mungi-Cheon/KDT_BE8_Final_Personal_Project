@@ -2,8 +2,10 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,java,macos,gradle
 
 ### yml ###
-*.yml
-*.yaml
+*dev.yml
+*dev.properties
+!*test.yml
+!docker-compose.yml
 
 ### Java ###
 # Compiled class file

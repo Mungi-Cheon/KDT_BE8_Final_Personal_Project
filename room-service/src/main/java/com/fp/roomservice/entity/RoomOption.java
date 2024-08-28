@@ -10,31 +10,39 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
+@Entity
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Room {
+@AllArgsConstructor
+public class RoomOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private Long accommodationId;
+    private Long roomId;
 
-    private String name;
+    private Boolean hasBath;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    private Boolean hasAirCondition;
 
-    private String checkInTime;
+    private Boolean hasTv;
 
-    private String checkOutTime;
+    private Boolean hasPc;
 
-    private int standardNumber;
+    private Boolean hasWifi;
 
-    private int maximumNumber;
+    private Boolean hasCable;
 
-    private String type;
+    private Boolean hasRefrigerator;
+
+    private Boolean hasSofa;
+
+    private Boolean canCook;
+
+    private Boolean hasTable;
+
+    private Boolean hasHairdryer;
 }

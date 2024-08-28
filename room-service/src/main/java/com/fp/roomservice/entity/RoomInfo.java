@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,26 +16,22 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Room {
+public class RoomInfo {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long accommodationId;
+    private Long roomId;
 
-    private String name;
+    private LocalDate date;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    private int price;
 
-    private String checkInTime;
+    private int count;
 
-    private String checkOutTime;
-
-    private int standardNumber;
-
-    private int maximumNumber;
-
-    private String type;
+    public void decreaseCountByOne() {
+        this.count--;
+    }
 }
