@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long> {
 
     @Query("SELECT r FROM RoomInfo r " +
-        "WHERE r.id = :roomId " +
+        "WHERE r.roomId = :roomId " +
         "AND r.date BETWEEN :checkInDate AND :checkOutDate")
     List<RoomInfo> findByRoomIdAndDateRange(
         @Param("roomId") Long roomId,
