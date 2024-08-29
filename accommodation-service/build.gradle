@@ -25,8 +25,8 @@ dependencies {
     implementation 'com.github.ben-manes.caffeine:caffeine'
 
     // redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.redisson:redisson-spring-boot-starter:3.31.0'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//    implementation 'org.redisson:redisson-spring-boot-starter:3.31.0'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
     // docs
