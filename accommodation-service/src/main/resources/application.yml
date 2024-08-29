@@ -5,6 +5,11 @@ spring:
     active: ${APP_PROFILE}
   config:
     import: ${CONFIG_SERVER_URI}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
 eureka:
   client:
