@@ -54,12 +54,6 @@ jobs:
       - name: Grant execute permission for Gradlew
         run: chmod +x ./gradlew
 
-      - name: Decode SSH Private Key
-        id: decode_key
-        run: |
-          echo "${{ secrets.CONFIG_GIT_PRIVATE_KEY }}" | base64 -d > git_private_key
-          chmod 600 git_private_key
-
       - name: Delete .env, docker-compose, git_private_key
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -72,17 +66,6 @@ jobs:
             cd /home/config-service/
             rm -f .env
             rm -f docker-compose.yml
-            rm -f git_private_key
-
-      - name: Copy SSH Key to Ubuntu Server
-        uses: appleboy/scp-action@v0.1.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_KEY }}
-          port: ${{ secrets.EC2_SSH_PORT }}
-          source: "git_private_key"
-          target: "/home/config-server"
 
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@v0.1.3
@@ -106,7 +89,7 @@ jobs:
             echo "CONFIG_SERVER_PORT=${{secrets.CONFIG_SERVER_PORT}}" >> /home/config-server/.env
             echo "CONFIG_APP_NAME=${{secrets.CONFIG_APP_NAME}}" >> /home/config-server/.env
             echo "CONFIG_GIT_URI=${{secrets.CONFIG_GIT_URI}}" >> /home/config-server/.env
-            echo "CONFIG_GIT_PRIVATE_KEY=$(cat git_private_key)" >> /home/config-server/.env
+            echo "GIT_HOST_KEY=${{secrets.GIT_HOST_KEY}}" >> /home/config-server/.env
             echo "CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING=${{secrets.CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING}}" >> /home/config-server/.env
             echo "CONFIG_USERNAME=${{secrets.CONFIG_USERNAME}}" >> /home/config-server/.env
             echo "CONFIG_PASSWORD=${{secrets.CONFIG_PASSWORD}}" >> /home/config-server/.env
