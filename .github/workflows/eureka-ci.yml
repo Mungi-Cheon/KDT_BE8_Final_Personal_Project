@@ -6,6 +6,7 @@ on:
       - develop
     paths:
       - 'eureka-server/**'
+      - ".github/workflows/eureka*"
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -1,11 +1,11 @@
-name: room server CD
+name: member server CD
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'room-service/**'
-      - ".github/workflows/room*"
+      - 'member-service/**'
+      - ".github/workflows/member*"
 
 jobs:
   build:
@@ -26,11 +26,11 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle Wrapper
-        run: ./gradlew :room-service:build -x test
+        run: ./gradlew :member-service:build -x test
 
       # Docker 이미지 build
       - name: docker image build
-        run: docker build -t ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_ROOM_IMAGE_NAME}}  -f room-service/Dockerfile room-service/
+        run: docker build -t ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_MEMBER_IMAGE_NAME}}  -f member-service/Dockerfile member-service/
 
       # DockerHub 로그인
       - name: docker login
@@ -41,7 +41,7 @@ jobs:
 
       # DockerHub push
       - name: docker Hub push
-        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_ROOM_IMAGE_NAME}}:latest
+        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_MEMBER_IMAGE_NAME}}:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -63,7 +63,7 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            cd /home/room-service/
+            cd /home/member-service/
             rm -f .env
             rm -f docker-compose.yml
 
@@ -76,9 +76,9 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            echo "ROOM_APP_NAME=${{secrets.ROOM_APP_NAME}}" >> /home/room-service/.env
-            echo "APP_PROFILE=${{secrets.APP_PROFILE}}" >> /home/room-service/.env
-            echo "CONFIG_SERVER_URI=${{secrets.CONFIG_SERVER_URI}}" >> /home/room-service/.env
+            echo "MEMBER_APP_NAME=${{secrets.MEMBER_APP_NAME}}" >> /home/member-service/.env
+            echo "APP_PROFILE=${{secrets.APP_PROFILE}}" >> /home/member-service/.env
+            echo "CONFIG_SERVER_URI=${{secrets.CONFIG_SERVER_URI}}" >> /home/member-service/.env
 
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@v0.1.3
@@ -87,7 +87,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           port: ${{ secrets.EC2_SSH_PORT }}
-          source: "./room-service/docker-compose.yml"
+          source: "./member-service/docker-compose.yml"
           target: "/home"
 
       - name: Deploy application with Docker Compose
@@ -99,7 +99,7 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            cd /home/room-service/
+            cd /home/member-service/
             docker-compose down
             docker-compose pull
             docker-compose up -d
