@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - "config-server/**"
-      - "config*.yml"
+      - ".github/workflows/config*"
 
 jobs:
   build:

@@ -6,7 +6,7 @@ on:
       - develop
     paths:
       - "config-server/**"
-      - "config*.yml"
+      - ".github/workflows/config*"
 jobs:
   build:
     runs-on: ubuntu-latest
