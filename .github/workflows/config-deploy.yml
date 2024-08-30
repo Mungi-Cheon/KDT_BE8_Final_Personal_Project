@@ -63,7 +63,7 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            cd /home/config-service/
+            cd /home/config-server/
             rm -f .env
             rm -f docker-compose.yml
 
