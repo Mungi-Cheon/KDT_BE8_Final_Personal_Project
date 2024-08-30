@@ -5,7 +5,7 @@ services:
     env_file:
       - /home/config-server/.env  # .env 파일에서 환경 변수를 로드
     ports:
-      - 9000:9000
+      - 8888:8888
     networks:
       - service-network
 
