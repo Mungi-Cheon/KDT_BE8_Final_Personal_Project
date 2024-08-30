@@ -9,8 +9,12 @@ spring:
       server:
         git:
           uri: ${CONFIG_GIT_URI}
-          username: ${GITHUB_USERNAME}
-          password: ${GITHUB_PASSWORD}
+          search-paths: config-file/**
+          default-label: main
+          ignore-local-ssh-settings: ${CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING}
+          private-key: ${CONFIG_GIT_PRIVATE_KEY}
+#          username: ${GITHUB_USERNAME}
+#          password: ${GITHUB_PASSWORD}
 config:
   username: ${CONFIG_USERNAME}
   password: ${CONFIG_PASSWORD}

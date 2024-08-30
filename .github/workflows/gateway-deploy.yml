@@ -50,6 +50,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Delete .env and docker-compose
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          timeout: 60s
+          script: |
+            cd /home/gateway-service/
+            rm -f .env
+            rm -f docker-compose.yml
+
       - name: set environment variables
         uses: appleboy/ssh-action@v0.1.6
         with:
