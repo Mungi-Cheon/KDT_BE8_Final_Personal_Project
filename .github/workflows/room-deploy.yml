@@ -1,10 +1,10 @@
-name: config server CD
+name: room server CD
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'config-server/**'
+      - 'room-service/**'
 
 jobs:
   build:
@@ -25,11 +25,11 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle Wrapper
-        run: ./gradlew :config-server:build -x test
+        run: ./gradlew :room-service:build -x test
 
       # Docker 이미지 build
       - name: docker image build
-        run: docker build -t ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_CONFIG_IMAGE_NAME}}  -f config-server/Dockerfile config-server/
+        run: docker build -t ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_ROOM_IMAGE_NAME}}  -f room-service/Dockerfile room-service/
 
       # DockerHub 로그인
       - name: docker login
@@ -40,7 +40,7 @@ jobs:
 
       # DockerHub push
       - name: docker Hub push
-        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_CONFIG_IMAGE_NAME}}:latest
+        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/${{secrets.DOCKER_ROOM_IMAGE_NAME}}:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,25 +49,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Grant execute permission for Gradlew
-        run: chmod +x ./gradlew
-
-      - name: Decode SSH Private Key
-        id: decode_key
-        run: |
-          echo "${{ secrets.CONFIG_GIT_PRIVATE_KEY }}" | base64 -d > git_private_key
-          chmod 600 git_private_key
-
-      - name: Copy SSH Key to Ubuntu Server
-        uses: appleboy/scp-action@v0.1.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_KEY }}
-          port: ${{ secrets.EC2_SSH_PORT }}
-          source: "git_private_key"
-          target: "/home/config"
 
       - name: Delete .env and docker-compose
         uses: appleboy/ssh-action@v0.1.6
@@ -78,19 +59,9 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            cd /home/config-service/
+            cd /home/room-service/
             rm -f .env
             rm -f docker-compose.yml
-
-      - name: Copy docker-compose.yml to EC2
-        uses: appleboy/scp-action@v0.1.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_KEY }}
-          port: ${{ secrets.EC2_SSH_PORT }}
-          source: "./config-server/docker-compose.yml"
-          target: "/home"
 
       - name: set environment variables
         uses: appleboy/ssh-action@v0.1.6
@@ -101,13 +72,22 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            echo "CONFIG_SERVER_PORT=${{secrets.CONFIG_SERVER_PORT}}" >> /home/config-server/.env
-            echo "CONFIG_APP_NAME=${{secrets.CONFIG_APP_NAME}}" >> /home/config-server/.env
-            echo "CONFIG_GIT_URI=${{secrets.CONFIG_GIT_URI}}" >> /home/config-server/.env
-            echo "CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING=$(cat git_private_key)" >> /home/config-server/.env
-            echo "CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING=${{secrets.CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING}}" >> /home/config-server/.env
-            echo "CONFIG_USERNAME=${{secrets.CONFIG_USERNAME}}" >> /home/config-server/.env
-            echo "CONFIG_PASSWORD=${{secrets.CONFIG_PASSWORD}}" >> /home/config-server/.env
+            echo "ROOM_APP_NAME=${{secrets.ROOM_APP_NAME}}" >> /home/room-service/.env
+            echo "APP_PROFILE=${{secrets.APP_PROFILE}}" >> /home/room-service/.env
+            echo "CONFIG_SERVER_URI=${{secrets.CONFIG_SERVER_URI}}" >> /home/room-service/.env
+            echo "ROOM_REGISTER_WITH_EUREKA=${{secrets.ROOM_REGISTER_WITH_EUREKA}}" >> /home/room-service/.env
+            echo "ROOM_EUREKA_FETCH_REGISTRY=${{secrets.ROOM_EUREKA_FETCH_REGISTRY}}" >> /home/room-service/.env
+            echo "EUREKA_SERVER_URI=${{secrets.EUREKA_SERVER_URI}}" >> /home/room-service/.env
+
+      - name: Copy docker-compose.yml to EC2
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          source: "./room-service/docker-compose.yml"
+          target: "/home"
 
       - name: Deploy application with Docker Compose
         uses: appleboy/ssh-action@v0.1.6
@@ -118,7 +98,7 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            cd /home/config-server/
+            cd /home/room-service/
             docker-compose down
             docker-compose pull
             docker-compose up -d

@@ -1,6 +1,6 @@
-package com.fp.roomservice.entity;
+package com.fp.accommodationservice.entity;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,31 +10,28 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Room {
+@Entity
+public class AccommodationOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long accommodationId;
+    private Boolean hasSmokingRoom;
 
-    private String name;
+    private Boolean hasCooking;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    private Boolean hasParking;
 
-    private String checkInTime;
+    private Boolean hasSwimmingPool;
 
-    private String checkOutTime;
+    private Boolean hasBreakfast;
 
-    private int standardNumber;
+    private Boolean hasFitness;
 
-    private int maximumNumber;
-
-    private String type;
+    private Boolean hasBeauty;
 }

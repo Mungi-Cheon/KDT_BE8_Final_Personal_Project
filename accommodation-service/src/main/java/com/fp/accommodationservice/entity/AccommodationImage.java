@@ -1,6 +1,5 @@
-package com.fp.roomservice.entity;
+package com.fp.accommodationservice.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,10 +11,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Room {
+@Builder
+public class AccommodationImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,18 +22,6 @@ public class Room {
 
     private Long accommodationId;
 
-    private String name;
+    private String imageUrl;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    private String checkInTime;
-
-    private String checkOutTime;
-
-    private int standardNumber;
-
-    private int maximumNumber;
-
-    private String type;
 }
