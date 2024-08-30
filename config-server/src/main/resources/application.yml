@@ -12,9 +12,14 @@ spring:
           search-paths: config-file/**
           default-label: main
           ignore-local-ssh-settings: ${CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING}
-          private-key: ${CONFIG_GIT_PRIVATE_KEY}
-#          username: ${GITHUB_USERNAME}
-#          password: ${GITHUB_PASSWORD}
+          privateKey: |
+            -----BEGIN EC PRIVATE KEY-----
+            MHcCAQEEIOGBXyQA5hxwYOdKrM28rlKHbH58QfAXv5rV2wcE3JdnoAoGCCqGSM49
+            AwEHoUQDQgAEy9Z69mvtR8ol9lPgh1eD3E5VAJJVI5tIKyM6ULTbeGUPXFOcpGM9
+            andO2bZC5GP4dI9p6EO9o3MFrCd16cvC3g==
+            -----END EC PRIVATE KEY-----
+          host-key: ${GIT_HOST_KEY}
+          host-key-algorithm: ecdsa-sha2-nistp256
 config:
   username: ${CONFIG_USERNAME}
   password: ${CONFIG_PASSWORD}
