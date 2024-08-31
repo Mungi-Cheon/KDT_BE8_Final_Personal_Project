@@ -1,0 +1,14 @@
+services:
+  app:
+    image: mgcheon/final-reservation:latest
+    container_name: reservation-service
+    env_file:
+      - /home/reservation-service/.env  # .env 파일에서 환경 변수를 로드
+    ports:
+      - 8083:8083
+    networks:
+      - service-network
+
+networks:
+  service-network:
+    driver: bridge

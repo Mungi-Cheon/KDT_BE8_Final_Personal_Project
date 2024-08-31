@@ -1,0 +1,14 @@
+services:
+  app:
+    image: mgcheon/final-review:latest
+    container_name: review-service
+    env_file:
+      - /home/review-service/.env  # .env 파일에서 환경 변수를 로드
+    ports:
+      - 8084:8084
+    networks:
+      - service-network
+
+networks:
+  service-network:
+    driver: bridge
