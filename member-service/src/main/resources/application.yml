@@ -1,14 +1,7 @@
 spring:
   application:
-    name: ${EUREKA_APP_NAME}
+    name: ${MEMBER_APP_NAME}
   profiles:
     active: ${APP_PROFILE}
   config:
     import: optional:configserver:${CONFIG_SERVER_URI}
-
-
-
-
-
-
-

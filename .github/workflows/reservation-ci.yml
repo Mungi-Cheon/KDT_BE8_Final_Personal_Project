@@ -1,12 +1,12 @@
-name: room service CI
+name: reservation service CI
 
 on:
   pull_request:
     branches:
       - develop
     paths:
-      - 'room-service/**'
-      - ".github/workflows/room*"
+      - 'reservation-service/**'
+      - ".github/workflows/reservation*"
 
 jobs:
   build:
@@ -25,4 +25,4 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run Tests with Gradle [--parallel]
-        run: ./gradlew :room-service:build -x test
+        run: ./gradlew :reservation-service:build -x test
