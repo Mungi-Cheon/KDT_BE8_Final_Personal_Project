@@ -5,7 +5,7 @@ services:
     env_file:
       - /home/gateway-service/.env  # .env 파일에서 환경 변수를 로드
     ports:
-      - 8080:8080
+      - 8000:8000
     networks:
       - service-network
 
