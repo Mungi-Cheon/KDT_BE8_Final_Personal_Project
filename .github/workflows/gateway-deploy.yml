@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'gateway-service/**'
+      - ".github/workflows/gateway*"
 
 jobs:
   build:
@@ -50,6 +51,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
+
       - name: Delete .env and docker-compose
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -72,9 +76,9 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            echo "EUREKA_SERVER_PORT=${{secrets.EUREKA_SERVER_PORT}}" >> /home/gateway-service/.env
-            echo "EUREKA_CLIENT_REGISTER_WITH_EUREKA=${{secrets.EUREKA_CLIENT_REGISTER_WITH_EUREKA}}" >> /home/gateway-service/.env
-            echo "EUREKA_FETCH_REGISTRY=${{secrets.CONFIG_GIT_PRIVATE_KEY}}" >> /home/gateway-service/.env
+            echo "GATEWAY_APP_NAME=${{secrets.GATEWAY_APP_NAME}}" >> /home/gateway-service/.env
+            echo "APP_PROFILE=${{secrets.APP_PROFILE}}" >> /home/gateway-service/.env
+            echo "CONFIG_SERVER_URI=${{secrets.CONFIG_SERVER_URI}}" >> /home/gateway-service/.env
 
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@v0.1.3

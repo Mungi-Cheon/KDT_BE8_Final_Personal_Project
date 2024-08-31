@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'accommodation-service/**'
+      - ".github/workflows/accommodation*"
 
 jobs:
   build:
@@ -50,6 +51,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
+
+      - name: Delete .env, docker-compose, git_private_key
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          timeout: 60s
+          script: |
+            cd /home/accommodation_service/
+            rm -f .env
+            rm -f docker-compose.yml
+
       - name: set environment variables
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -62,9 +79,6 @@ jobs:
             echo "ACCOMMODATION_APP_NAME=${{secrets.ACCOMMODATION_APP_NAME}}" >> /home/accommodation-service/.env
             echo "APP_PROFILE=${{secrets.APP_PROFILE}}" >> /home/accommodation-service/.env
             echo "CONFIG_SERVER_URI=${{secrets.CONFIG_SERVER_URI}}" >> /home/accommodation-service/.env
-            echo "ACCOMMODATION_REGISTER_WITH_EUREKA=${{secrets.ACCOMMODATION_REGISTER_WITH_EUREKA}}" >> /home/accommodation-service/.env
-            echo "ACCOMMODATION_EUREKA_FETCH_REGISTRY=${{secrets.ACCOMMODATION_EUREKA_FETCH_REGISTRY}}" >> /home/accommodation-service/.env
-            echo "EUREKA_SERVER_URI=${{secrets.EUREKA_SERVER_URI}}" >> /home/accommodation-service/.env
 
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@v0.1.3

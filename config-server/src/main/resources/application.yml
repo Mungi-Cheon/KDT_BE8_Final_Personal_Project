@@ -19,7 +19,8 @@ spring:
             andO2bZC5GP4dI9p6EO9o3MFrCd16cvC3g==
             -----END EC PRIVATE KEY-----
           host-key: ${GIT_HOST_KEY}
-          host-key-algorithm: ecdsa-sha2-nistp256
+          host-key-algorithm: ${GIT_HOST_ALGORITHM}
+#          clone-on-start: true
 config:
   username: ${CONFIG_USERNAME}
   password: ${CONFIG_PASSWORD}

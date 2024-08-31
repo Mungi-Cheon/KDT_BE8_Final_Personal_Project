@@ -6,6 +6,7 @@ on:
       - develop
     paths:
       - 'gateway-service/**'
+      - ".github/workflows/gateway*"
 jobs:
   build:
     runs-on: ubuntu-latest

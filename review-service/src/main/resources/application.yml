@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ${ACCOMMODATION_APP_NAME}
+    name: ${REVIEW_APP_NAME}
   profiles:
     active: ${APP_PROFILE}
   config:

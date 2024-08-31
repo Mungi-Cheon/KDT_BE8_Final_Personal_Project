@@ -90,6 +90,7 @@ jobs:
             echo "CONFIG_APP_NAME=${{secrets.CONFIG_APP_NAME}}" >> /home/config-server/.env
             echo "CONFIG_GIT_URI=${{secrets.CONFIG_GIT_URI}}" >> /home/config-server/.env
             echo "GIT_HOST_KEY=${{secrets.GIT_HOST_KEY}}" >> /home/config-server/.env
+            echo "GIT_HOST_ALGORITHM=${{secrets.GIT_HOST_ALGORITHM}}" >> /home/config-server/.env
             echo "CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING=${{secrets.CONFIG_GIT_IGNORE_LOCAL_SSH_SETTING}}" >> /home/config-server/.env
             echo "CONFIG_USERNAME=${{secrets.CONFIG_USERNAME}}" >> /home/config-server/.env
             echo "CONFIG_PASSWORD=${{secrets.CONFIG_PASSWORD}}" >> /home/config-server/.env

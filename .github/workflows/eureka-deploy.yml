@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'eureka-server/**'
+      - ".github/workflows/eureka*"
 
 jobs:
   build:
@@ -50,6 +51,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
+
+      - name: Delete .env, docker-compose, git_private_key
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          timeout: 60s
+          script: |
+            cd /home/eureka-server/
+            rm -f .env
+            rm -f docker-compose.yml
+
       - name: set environment variables
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -59,14 +76,9 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            echo "EUREKA_SERVER_PORT=${{secrets.EUREKA_SERVER_PORT}}" >> /home/eureka-server/.env
-            echo "EC2_HOST=${{secrets.EC2_HOST}}" >> /home/eureka-server/.env
-            echo "EUREKA_PREFER_IP_ADDRESS=${{secrets.EUREKA_PREFER_IP_ADDRESS}}" >> /home/eureka-server/.env            
-            echo "EUREKA_CLIENT_REGISTER_WITH_EUREKA=${{secrets.EUREKA_CLIENT_REGISTER_WITH_EUREKA}}" >> /home/eureka-server/.env
-            echo "EUREKA_FETCH_REGISTRY=${{secrets.EUREKA_FETCH_REGISTRY}}" >> /home/eureka-server/.env
-            echo "EUREKA_USERNAME=${{secrets.EUREKA_USERNAME}}" >> /home/eureka-server/.env
-            echo "EUREKA_PASSWORD=${{secrets.EUREKA_PASSWORD}}" >> /home/eureka-server/.env
-
+            echo "EUREKA_APP_NAME=${{secrets.EUREKA_APP_NAME}}" >> /home/eureka-server/.env
+            echo "APP_PROFILE=${{secrets.APP_PROFILE}}" >> /home/eureka-server/.env
+            echo "CONFIG_SERVER_URI=${{secrets.CONFIG_SERVER_URI}}" >> /home/eureka-server/.env
 
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@v0.1.3
