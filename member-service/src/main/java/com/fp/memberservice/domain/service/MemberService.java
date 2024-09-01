@@ -7,7 +7,13 @@ import com.fp.memberservice.domain.entity.Member;
 import com.fp.memberservice.domain.exception.ErrorType;
 import com.fp.memberservice.domain.exception.MemberException;
 import com.fp.memberservice.domain.repository.MemberRepository;
+import com.fp.memberservice.global.cookie.CookieProvider;
+import com.fp.memberservice.global.security.jwt.JwtProvider;
+import com.fp.memberservice.global.security.jwt.TokenType;
 import com.fp.memberservice.global.service.TokenService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +33,9 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     private final TokenService tokenService;
+    private final JwtProvider jwtProvider;
 
+    @Transactional
     public MemberResponse signup(SignupRequest request) {
         String email = request.getEmail();
 
@@ -41,6 +49,20 @@ public class MemberService implements UserDetailsService {
         Member savedMember = memberRepository.save(newMember);
         return MemberResponse.from(savedMember);
     }
+
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = Objects.requireNonNull(
+            CookieProvider.getCookie(request, TokenType.ACCESS.getName())).getValue();
+
+        Long memberId = jwtProvider.getMemberIdByToken(accessToken, TokenType.ACCESS);
+        memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(ErrorType.NOT_FOUND));
+
+        tokenService.addBlackList(accessToken);
+        CookieProvider.removeCookie(response, TokenType.REFRESH.getName());
+        CookieProvider.removeCookie(response, TokenType.ACCESS.getName());
+    }
+
 
     @Transactional
     public void deleteMember(Long memberId) {

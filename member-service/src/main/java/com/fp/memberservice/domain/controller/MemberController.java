@@ -3,6 +3,8 @@ package com.fp.memberservice.domain.controller;
 import com.fp.memberservice.domain.dto.request.SignupRequest;
 import com.fp.memberservice.domain.dto.response.MemberResponse;
 import com.fp.memberservice.domain.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,12 @@ public class MemberController {
         @RequestBody @Valid SignupRequest signupRequest) {
         MemberResponse response = memberService.signup(signupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        memberService.logout(request, response);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/unregister")

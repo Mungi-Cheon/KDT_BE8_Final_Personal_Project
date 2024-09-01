@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -82,10 +81,11 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         Date expiredTime = jwtProvider.getExpiredTime(accessToken, TokenType.ACCESS);
 
         // 쿠키 설정
-        ResponseCookie refreshTokenCookie = cookieProvider.createRefreshTokenCookie(refreshToken);
+        Cookie refreshCookie = cookieProvider.createCookie(refreshToken, TokenType.REFRESH);
+        Cookie accessCookie = cookieProvider.createCookie(accessToken, TokenType.ACCESS);
 
-        Cookie cookie = cookieProvider.of(refreshTokenCookie);
-        response.addCookie(cookie);
+        response.addCookie(refreshCookie);
+        response.addCookie(accessCookie);
 
         // responseBody 설정
         Map<String, Object> tokens = Map.of(

@@ -40,7 +40,7 @@ public class JwtProvider {
         this.refreshKey = Keys.hmacShaKeyFor(refreshKeyBytes);
     }
 
-    public String createJwtToken(Long userId, TokenType type, String requestURI) {
+    public String createJwtToken(Long memberId, TokenType type, String requestURI) {
 
         Key key;
         long expirationTime;
@@ -54,7 +54,7 @@ public class JwtProvider {
 
         return Jwts.builder()
             .claim("category", "access")
-            .claim("userId", userId)
+            .claim("memberId", memberId)
             .setIssuer(ISSUER + "_" + requestURI)
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
@@ -64,6 +64,10 @@ public class JwtProvider {
 
     public Date getExpiredTime(String token, TokenType type) {
         return getClaimsFromJwtToken(token, type).getExpiration();
+    }
+
+    public Long getMemberIdByToken(String token, TokenType type) {
+        return getClaimsFromJwtToken(token, type).get("memberId", Long.class);
     }
 
     private Claims getClaimsFromJwtToken(String token, TokenType type) {
