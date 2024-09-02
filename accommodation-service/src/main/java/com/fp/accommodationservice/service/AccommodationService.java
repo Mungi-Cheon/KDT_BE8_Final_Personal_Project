@@ -1,7 +1,9 @@
 package com.fp.accommodationservice.service;
 
+import com.fp.accommodationservice.dto.response.AccommodationDetailResponse;
 import com.fp.accommodationservice.dto.response.AccommodationResponse;
 import com.fp.accommodationservice.entity.Accommodation;
+import com.fp.accommodationservice.entity.AccommodationImage;
 import com.fp.accommodationservice.exception.AccommodationException;
 import com.fp.accommodationservice.exception.ErrorType;
 import com.fp.accommodationservice.repository.AccommodationImageRepository;
@@ -61,6 +63,18 @@ public class AccommodationService {
             })
             .toList();
     }
+
+    public AccommodationDetailResponse findAccommodation(Long accommodationId) {
+        Accommodation accommodation = accommodationRepository.findById(accommodationId)
+            .orElseThrow(() -> new AccommodationException(ErrorType.NOT_FOUND));
+
+        List<String> imageUrlList = accommodationImageRepository.findByAccommodationId(
+                accommodationId).stream().map(AccommodationImage::getImageUrl)
+            .toList();
+
+        return AccommodationDetailResponse.from(accommodation, imageUrlList);
+    }
+
 
     private List<Accommodation> findAccommodations(String category, Long lastAccommodationId) {
         if (category.isEmpty()) {
