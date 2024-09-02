@@ -1,5 +1,11 @@
 package com.fp.roomservice.service;
 
+import com.fp.roomservice.dto.response.RoomDetailResponse;
+import com.fp.roomservice.dto.response.RoomImageResponse;
+import com.fp.roomservice.dto.response.RoomListResponse;
+import com.fp.roomservice.dto.response.RoomOptionResponse;
+import com.fp.roomservice.dto.response.RoomResponse;
+import com.fp.roomservice.dto.response.RoomSimpleResponse;
 import com.fp.roomservice.entity.Room;
 import com.fp.roomservice.entity.RoomImage;
 import com.fp.roomservice.entity.RoomInfo;
@@ -10,12 +16,6 @@ import com.fp.roomservice.repository.RoomImageRepository;
 import com.fp.roomservice.repository.RoomInfoRepository;
 import com.fp.roomservice.repository.RoomOptionRepository;
 import com.fp.roomservice.repository.RoomRepository;
-import com.fp.roomservice.response.RoomDetailResponse;
-import com.fp.roomservice.response.RoomImageResponse;
-import com.fp.roomservice.response.RoomListResponse;
-import com.fp.roomservice.response.RoomOptionResponse;
-import com.fp.roomservice.response.RoomResponse;
-import com.fp.roomservice.response.RoomSimpleResponse;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -112,6 +112,20 @@ public class RoomService {
             .toList();
         Map<Long, List<RoomImage>> roomIdToImageMap = findRoomIdToImageMap(roomList);
         return createRoomSimpleResponse(roomList, roomIdToImageMap, keyword);
+    }
+
+    @Transactional(readOnly = true)
+    public RoomImageResponse findRoomImagesByRoomId(Long accommodationId, Long roomId) {
+        roomRepository.findByIdAndAccommodationId(roomId, accommodationId)
+            .orElseThrow(() -> new RoomException(ErrorType.NOT_FOUND));
+
+        List<RoomImage> roomImageList = roomImageRepository.findAllByRoomId(roomId);
+        if (roomImageList.isEmpty()) {
+            throw new RoomException(ErrorType.NOT_FOUND);
+        }
+
+        List<String> imageUrlList = roomImageList.stream().map(RoomImage::getImageUrl).toList();
+        return RoomImageResponse.from(imageUrlList);
     }
 
     private List<RoomSimpleResponse> createRoomSimpleResponse(List<Room> roomList,

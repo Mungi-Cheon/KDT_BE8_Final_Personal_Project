@@ -2,14 +2,15 @@ package com.fp.accommodationservice.controller;
 
 import com.fp.accommodationservice.dto.request.AccommodationRequest;
 import com.fp.accommodationservice.dto.response.AccommodationResponse;
+import com.fp.accommodationservice.dto.response.AccommodationDetailResponse;
 import com.fp.accommodationservice.entity.type.Category;
 import com.fp.accommodationservice.service.AccommodationService;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,5 +36,13 @@ public class AccommodationController {
                 request.getCheckOutDate(), personNumber, lastAccommodationId);
 
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/{accommodationId}}")
+    public ResponseEntity<AccommodationDetailResponse> getAccommodation(
+        @PathVariable Long accommodationId) {
+        AccommodationDetailResponse response = accommodationService.findAccommodation(
+            accommodationId);
+        return ResponseEntity.ok(response);
     }
 }
