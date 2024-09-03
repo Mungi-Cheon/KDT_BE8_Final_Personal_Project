@@ -1,6 +1,6 @@
-package com.fp.reservationservice.global.feign.client;
+package com.fp.roomservice.global.feign.client;
 
-import com.fp.reservationservice.global.feign.dto.response.accommodation.AccommodationDetailResponse;
+import com.fp.roomservice.global.feign.dto.response.accommodation.AccommodationDetailResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

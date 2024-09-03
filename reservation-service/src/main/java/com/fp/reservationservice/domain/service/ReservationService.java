@@ -65,7 +65,7 @@ public class ReservationService {
             throw new ReservationsException(ErrorType.ALREADY_RESERVATION);
         }
 
-        AccommodationDetailResponse accommodation = accommodationClient.getAccommodation(
+        AccommodationDetailResponse accommodation = accommodationClient.getAccommodationDetail(
             request.getAccommodationId());
 
         // TODO room service에 객실 이름, 가격, 예약 인원, 기준 인원, 최대인원, 객실 이미지 조회
@@ -78,10 +78,11 @@ public class ReservationService {
         Reservation reservation = createReservation(
             memberId, request.getAccommodationId(),
             request.getRoomId(), accommodation.getName(),
-            request.getPersonNumber(), checkInDate,
-            checkOutDate, room.getPrice(),
-            nights, room.getType(),
-            room.getStandardNumber(), room.getMaximumNumber()
+            room.getName(), request.getPersonNumber(),
+            checkInDate, checkOutDate,
+            room.getPrice(), nights,
+            room.getType(), room.getStandardNumber(),
+            room.getMaximumNumber()
         );
 
         Reservation saved = reservationRepository.save(reservation);
@@ -90,15 +91,17 @@ public class ReservationService {
 
     private Reservation createReservation(Long memberId, Long accommodationId,
         Long roomId, String accommodationName,
-        Integer personNumber, LocalDate checkInDate,
-        LocalDate checkOutDate, int price,
-        int night, String roomType,
-        int standardNumber, int maximumNumber) {
+        String roomName, Integer personNumber,
+        LocalDate checkInDate, LocalDate checkOutDate,
+        int price, int night,
+        String roomType, int standardNumber,
+        int maximumNumber) {
         return Reservation.builder()
             .memberId(memberId)
             .accommodationId(accommodationId)
-            .roomId(roomId)
             .accommodationName(accommodationName)
+            .roomId(roomId)
+            .roomName(roomName)
             .personNumber(personNumber)
             .checkInDate(checkInDate)
             .checkOutDate(checkOutDate)

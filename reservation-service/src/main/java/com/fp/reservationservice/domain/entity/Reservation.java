@@ -26,9 +26,11 @@ public class Reservation {
 
     private Long accommodationId;
 
+    private String accommodationName;
+
     private Long roomId;
 
-    private String accommodationName;
+    private String roomName;
 
     private Integer personNumber;
 
