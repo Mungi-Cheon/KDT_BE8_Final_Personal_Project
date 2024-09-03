@@ -1,6 +1,5 @@
 package com.fp.roomservice.domain.dto.response;
 
-
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;

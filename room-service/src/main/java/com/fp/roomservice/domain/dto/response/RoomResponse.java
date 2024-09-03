@@ -1,6 +1,5 @@
 package com.fp.roomservice.domain.dto.response;
 
-
 import com.fp.roomservice.domain.entity.Room;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
