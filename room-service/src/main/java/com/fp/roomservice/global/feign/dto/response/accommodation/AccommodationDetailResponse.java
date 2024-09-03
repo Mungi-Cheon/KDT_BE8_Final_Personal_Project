@@ -1,4 +1,4 @@
-package com.fp.reservationservice.global.feign.dto.response.accommodation;
+package com.fp.roomservice.global.feign.dto.response.accommodation;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

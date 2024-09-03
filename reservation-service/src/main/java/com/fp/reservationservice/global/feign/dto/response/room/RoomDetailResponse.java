@@ -4,9 +4,11 @@ package com.fp.reservationservice.global.feign.dto.response.room;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class RoomDetailResponse {
 
     private Long id;

@@ -2,9 +2,11 @@ package com.fp.reservationservice.global.feign.dto.response.room;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class RoomOptionResponse {
 
     private boolean hasBath;

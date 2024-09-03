@@ -38,8 +38,8 @@ public class AccommodationController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/{accommodationId}}")
-    public ResponseEntity<AccommodationDetailResponse> getAccommodation(
+    @GetMapping("/{accommodationId}")
+    public ResponseEntity<AccommodationDetailResponse> getAccommodationDetail(
         @PathVariable Long accommodationId) {
         AccommodationDetailResponse response = accommodationService.findAccommodation(
             accommodationId);
