@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface RoomClient {
 
 
-    @GetMapping("/api/accommodations/{accommodationId}/rooms/{roomId}")
+    @GetMapping("/api/accommodation/{accommodationId}/rooms/{roomId}")
     RoomDetailResponse getRoomDetail(@PathVariable Long accommodationId,
         @PathVariable Long roomId,
         @RequestParam(required = false) LocalDate checkInDate,
         @RequestParam(required = false) LocalDate checkOutDate,
         @RequestParam(defaultValue = "2") Integer personNumber);
 
-    @GetMapping("/api/accommodations/{accommodationId}/rooms/{roomId}/images")
+    @GetMapping("/api/accommodation/{accommodationId}/rooms/{roomId}/images")
     RoomImageResponse getRoomImagesByRoomIds(
         @PathVariable Long accommodationId, @PathVariable Long roomId);
 }

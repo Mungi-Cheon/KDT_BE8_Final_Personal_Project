@@ -48,7 +48,7 @@ public class SecurityConfig {
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(
             objectMapper, authenticationManager(), jwtProvider, cookieProvider,
             tokenService);
-        loginAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        loginAuthenticationFilter.setFilterProcessesUrl("/api/auth/login");
 
         http.csrf(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)

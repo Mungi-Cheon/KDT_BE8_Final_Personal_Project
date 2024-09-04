@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/api/reservation")
 public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @GetMapping("/reservation/history")
+    @GetMapping("/history")
     public ResponseEntity<ReservationHistoryListResponse> getReservationHistories(
         @RequestHeader("member-id") Long memberId) {
         ReservationHistoryListResponse response = reservationService
@@ -32,7 +32,7 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/reservation")
+    @PostMapping
     public ResponseEntity<ReservationResponse> reservation(
         @RequestHeader("member-id") Long memberId,
         @Valid @RequestBody ReservationRequest request) {
@@ -41,7 +41,7 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/reservation")
+    @DeleteMapping
     public ResponseEntity<ReservationCancelResponse> reservationCancel(
         @RequestHeader("member-id") Long memberId, @RequestBody ReservationCancelRequest request) {
         ReservationCancelResponse response = reservationService
