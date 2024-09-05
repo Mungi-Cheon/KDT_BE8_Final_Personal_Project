@@ -11,13 +11,14 @@ import com.fp.roomservice.domain.entity.RoomImage;
 import com.fp.roomservice.domain.entity.RoomInfo;
 import com.fp.roomservice.domain.entity.RoomOption;
 import com.fp.roomservice.domain.repository.RoomImageRepository;
-import com.fp.roomservice.domain.exception.ErrorType;
+import com.fp.roomservice.global.exception.type.RoomErrorType;
 import com.fp.roomservice.domain.exception.RoomException;
 import com.fp.roomservice.domain.repository.RoomInfoRepository;
 import com.fp.roomservice.domain.repository.RoomOptionRepository;
 import com.fp.roomservice.domain.repository.RoomRepository;
 import com.fp.roomservice.global.feign.client.AccommodationClient;
 import com.fp.roomservice.global.feign.dto.response.accommodation.AccommodationDetailResponse;
+import com.fp.roomservice.global.redis.RedissonLock;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -77,27 +78,27 @@ public class RoomService {
             accommodationId);
 
         Room room = roomRepository.findByIdAndAccommodationId(roomId, accommodationId)
-            .orElseThrow(() -> new RoomException(ErrorType.NOT_FOUND));
+            .orElseThrow(() -> new RoomException(RoomErrorType.NOT_FOUND));
 
         if (personNumber > room.getMaximumNumber()) {
-            throw new RoomException(ErrorType.INVALID_NUMBER_OF_PEOPLE);
+            throw new RoomException(RoomErrorType.INVALID_NUMBER_OF_PEOPLE);
         }
 
-        List<RoomInfo> availableRoomInfoList = findAvailableRoomInfo(roomId, checkInDate,
+        List<RoomInfo> availableRoomInfoList = findRoomInfoList(roomId, checkInDate,
             checkOutDate);
 
         int totalPrice = calculateTotalPrice(availableRoomInfoList);
 
         long expectedNights = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
         if (availableRoomInfoList.size() < expectedNights) {
-            throw new RoomException(ErrorType.NOT_FOUND);
+            throw new RoomException(RoomErrorType.NOT_FOUND);
         }
 
         List<String> imageList = roomImageRepository.findAllByRoomId(roomId)
             .stream().map(RoomImage::getImageUrl).collect(Collectors.toList());
 
         RoomOption roomOption = roomOptionRepository.findByRoomId(roomId)
-            .orElseThrow(() -> new RoomException(ErrorType.NOT_FOUND));
+            .orElseThrow(() -> new RoomException(RoomErrorType.NOT_FOUND));
 
         RoomImageResponse roomImageResponse = RoomImageResponse.from(imageList);
         RoomOptionResponse roomOptionResponse = RoomOptionResponse.from(roomOption);
@@ -120,15 +121,29 @@ public class RoomService {
     @Transactional(readOnly = true)
     public RoomImageResponse findRoomImagesByRoomId(Long accommodationId, Long roomId) {
         roomRepository.findByIdAndAccommodationId(roomId, accommodationId)
-            .orElseThrow(() -> new RoomException(ErrorType.NOT_FOUND));
+            .orElseThrow(() -> new RoomException(RoomErrorType.NOT_FOUND));
 
         List<RoomImage> roomImageList = roomImageRepository.findAllByRoomId(roomId);
         if (roomImageList.isEmpty()) {
-            throw new RoomException(ErrorType.NOT_FOUND);
+            throw new RoomException(RoomErrorType.NOT_FOUND);
         }
 
         List<String> imageUrlList = roomImageList.stream().map(RoomImage::getImageUrl).toList();
         return RoomImageResponse.from(imageUrlList);
+    }
+
+    @Transactional
+    @RedissonLock(key = "'reservation_' + #roomId + '_' + #checkIn + '_' + #checkOut")
+    public void decreaseCountByOne(Long roomId, LocalDate checkIn, LocalDate checkOut) {
+
+        List<RoomInfo> roomInfoList = findRoomInfoList(roomId, checkIn, checkOut);
+
+        for (RoomInfo roomInfo : roomInfoList) {
+            if (roomInfo.getCount() <= 0) {
+                throw new RoomException(RoomErrorType.INCLUDES_FULLY_BOOKED_ROOM);
+            }
+            roomInfo.decreaseCountByOne();
+        }
     }
 
     private List<RoomSimpleResponse> createRoomSimpleResponse(List<Room> roomList,
@@ -146,7 +161,7 @@ public class RoomService {
 
     private void validatePersonNumber(int personNumber) {
         if (personNumber < 1) {
-            throw new RoomException(ErrorType.INVALID_NUMBER_OF_PEOPLE);
+            throw new RoomException(RoomErrorType.INVALID_NUMBER_OF_PEOPLE);
         }
     }
 
@@ -155,7 +170,7 @@ public class RoomService {
             accommodationId, personNumber);
 
         if (roomList.isEmpty()) {
-            throw new RoomException(ErrorType.INVALID_NUMBER_OF_PEOPLE);
+            throw new RoomException(RoomErrorType.INVALID_NUMBER_OF_PEOPLE);
         }
         return roomList;
     }
@@ -214,7 +229,7 @@ public class RoomService {
                 .toList());
     }
 
-    private List<RoomInfo> findAvailableRoomInfo(Long roomId, LocalDate checkInDate,
+    private List<RoomInfo> findRoomInfoList(Long roomId, LocalDate checkInDate,
         LocalDate checkOutDate) {
         return roomInfoRepository
             .findByRoomIdAndDateRange(roomId, checkInDate, checkOutDate);

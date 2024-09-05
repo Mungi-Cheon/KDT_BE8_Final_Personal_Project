@@ -68,12 +68,11 @@ public class ReservationService {
         AccommodationDetailResponse accommodation = accommodationClient.getAccommodationDetail(
             request.getAccommodationId());
 
-        // TODO room service에 객실 이름, 가격, 예약 인원, 기준 인원, 최대인원, 객실 이미지 조회
         RoomDetailResponse room = roomClient.getRoomDetail(request.getAccommodationId(),
             request.getRoomId(), checkInDate, checkOutDate,
             request.getPersonNumber());
 
-//        decreaseCountByOne(roomInfoList);
+        // TODO : kafka 예약 이벤트 발행 -> room service 이벤트 구독
 
         Reservation reservation = createReservation(
             memberId, request.getAccommodationId(),
@@ -157,13 +156,4 @@ public class ReservationService {
         });
         return rhList;
     }
-//    private void decreaseCountByOne(
-//        List<RoomInfo> roomInfoPerNightsList) {
-//        for (RoomInfo pi : roomInfoPerNightsList) {
-//            if (pi.getCount() <= 0) {
-//                throw new ReservationsException(ErrorType.INCLUDES_FULLY_BOOKED_ROOM);
-//            }
-//            pi.decreaseCountByOne();
-//        }
-//    }
 }
