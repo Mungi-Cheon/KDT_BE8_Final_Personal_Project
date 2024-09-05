@@ -1,4 +1,4 @@
-package com.fp.accommodationservice.config;
+package com.fp.accommodationservice.domain.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

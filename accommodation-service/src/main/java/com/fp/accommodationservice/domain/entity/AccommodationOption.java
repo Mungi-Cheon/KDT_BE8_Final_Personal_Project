@@ -1,6 +1,5 @@
-package com.fp.accommodationservice.entity;
+package com.fp.accommodationservice.domain.entity;
 
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

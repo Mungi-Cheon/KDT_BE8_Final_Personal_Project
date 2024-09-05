@@ -2,6 +2,7 @@ package com.fp.roomservice.domain.dto.response;
 
 
 import com.fp.roomservice.domain.entity.Room;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,15 +32,17 @@ public class RoomDetailResponse {
 
     private String type;
 
-    private RoomImageResponse roomImageResponse;
+    private int roomCount;
+
+    private List<String> roomImageUrlList;
 
     private RoomOptionResponse productOption;
 
 
     public static RoomDetailResponse from(Room room, String accommodationName,
         int price, int totalPrice,
-        int numberOfStay, RoomImageResponse roomImageResponse,
-        RoomOptionResponse roomOptionResponse) {
+        int numberOfStay, int roomCount,
+        List<String> roomImageUrlList, RoomOptionResponse roomOptionResponse) {
         return RoomDetailResponse.builder()
             .id(room.getId())
             .name(room.getName())
@@ -50,8 +53,9 @@ public class RoomDetailResponse {
             .numberOfStay(numberOfStay)
             .standardNumber(room.getStandardNumber())
             .maximumNumber(room.getMaximumNumber())
+            .roomCount(roomCount)
             .type(room.getType())
-            .roomImageResponse(roomImageResponse)
+            .roomImageUrlList(roomImageUrlList)
             .productOption(roomOptionResponse)
             .build();
     }

@@ -66,6 +66,48 @@ public class RoomService {
             roomResponses, checkInDate, checkOutDate);
     }
 
+
+    @Transactional(readOnly = true)
+    public List<RoomDetailResponse> getRoomDetailList(Long accommodationId, LocalDate checkIn,
+        LocalDate checkOut, int personNumber) {
+        LocalDate checkInDate = validCheckInDate(checkIn);
+        LocalDate checkOutDate = validCheckOutDate(checkOut);
+        validatePersonNumber(personNumber);
+
+        AccommodationDetailResponse accommodation = accommodationClient.getAccommodationDetail(
+            accommodationId);
+        List<Room> roomList = findAllRooms(accommodationId, personNumber);
+
+        return roomList.stream().map(room -> {
+            List<RoomInfo> availableRoomInfoList = findRoomInfoList(room.getId(), checkInDate,
+                checkOutDate);
+
+            int totalPrice = calculateTotalPrice(availableRoomInfoList);
+
+            long expectedNights = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+            if (availableRoomInfoList.size() < expectedNights) {
+                throw new RoomException(RoomErrorType.NOT_FOUND);
+            }
+
+            List<String> imageList = roomImageRepository.findAllByRoomId(room.getId())
+                .stream().map(RoomImage::getImageUrl).collect(Collectors.toList());
+
+            RoomOption roomOption = roomOptionRepository.findByRoomId(room.getId())
+                .orElseThrow(() -> new RoomException(RoomErrorType.NOT_FOUND));
+
+            RoomOptionResponse roomOptionResponse = RoomOptionResponse.from(roomOption);
+
+            int roomMinimumCount = availableRoomInfoList.stream()
+                .mapToInt(RoomInfo::getCount)
+                .min()
+                .orElse(0);
+
+            return RoomDetailResponse.from(room, accommodation.getName(),
+                availableRoomInfoList.get(0).getPrice(), totalPrice, (int) expectedNights,
+                roomMinimumCount, imageList, roomOptionResponse);
+        }).toList();
+    }
+
     @Transactional(readOnly = true)
     public RoomDetailResponse getRoomDetail(Long accommodationId, Long roomId,
         LocalDate checkIn, LocalDate checkOut, int personNumber) {
@@ -94,18 +136,22 @@ public class RoomService {
             throw new RoomException(RoomErrorType.NOT_FOUND);
         }
 
+        int roomMinimumCount = availableRoomInfoList.stream()
+            .mapToInt(RoomInfo::getCount)
+            .min()
+            .orElse(0);
+
         List<String> imageList = roomImageRepository.findAllByRoomId(roomId)
             .stream().map(RoomImage::getImageUrl).collect(Collectors.toList());
 
         RoomOption roomOption = roomOptionRepository.findByRoomId(roomId)
             .orElseThrow(() -> new RoomException(RoomErrorType.NOT_FOUND));
 
-        RoomImageResponse roomImageResponse = RoomImageResponse.from(imageList);
         RoomOptionResponse roomOptionResponse = RoomOptionResponse.from(roomOption);
 
         return RoomDetailResponse.from(room, accommodation.getName(),
             availableRoomInfoList.get(0).getPrice(), totalPrice, (int) expectedNights,
-            roomImageResponse, roomOptionResponse);
+            roomMinimumCount, imageList, roomOptionResponse);
     }
 
     @Transactional(readOnly = true)

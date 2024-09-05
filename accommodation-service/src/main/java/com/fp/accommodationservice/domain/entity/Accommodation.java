@@ -1,5 +1,6 @@
-package com.fp.accommodationservice.entity;
+package com.fp.accommodationservice.domain.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,17 +12,24 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AccommodationImage {
+public class Accommodation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long accommodationId;
+    @Column(nullable = false, length = 200)
+    private String name;
 
-    private String imageUrl;
 
+    private String contact;
+
+    private String description;
+
+    private String address;
+
+    private String category;
 }
