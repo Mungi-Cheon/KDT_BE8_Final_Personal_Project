@@ -12,8 +12,9 @@ import org.springframework.data.repository.query.Param;
 public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long> {
 
     @Query("SELECT r FROM RoomInfo r " +
-        "WHERE r.roomId = :roomId " +
-        "AND r.date BETWEEN :checkInDate AND :checkOutDate")
+        "WHERE r.roomId = :roomId "
+        + "AND r.date >= :checkInDate "
+        + "AND r.date < :checkOutDate")
     List<RoomInfo> findByRoomIdAndDateRange(
         @Param("roomId") Long roomId,
         @Param("checkInDate") LocalDate checkInDate,
@@ -31,17 +32,19 @@ public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long> {
     );
 
     @Query("SELECT MIN(r.count) FROM RoomInfo r " +
-        "WHERE r.roomId = :roomId " +
-        "AND r.date BETWEEN :checkInDate AND :checkOutDate")
+        "WHERE r.roomId = :roomId "
+        + "AND r.date >= :checkInDate "
+        + "AND r.date < :checkOutDate")
     Integer findMinCountByRoomIdAndDateRange(
         @Param("roomId") Long roomId,
         @Param("checkInDate") LocalDate checkInDate,
         @Param("checkOutDate") LocalDate checkOutDate);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT r FROM RoomInfo r " +
-        "WHERE r.roomId = :roomId " +
-        "AND r.date BETWEEN :checkInDate AND :checkOutDate")
+    @Query("SELECT r FROM RoomInfo r "
+        + "WHERE r.roomId = :roomId "
+        + "AND r.date >= :checkInDate "
+        + "AND r.date < :checkOutDate")
     List<RoomInfo> findByRoomIdAndDateRangeWithPessimisticLock(
         @Param("roomId") Long roomId,
         @Param("checkInDate") LocalDate checkInDate,
