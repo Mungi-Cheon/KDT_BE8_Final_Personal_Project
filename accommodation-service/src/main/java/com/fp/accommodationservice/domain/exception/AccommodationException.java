@@ -1,4 +1,4 @@
-package com.fp.accommodationservice.exception;
+package com.fp.accommodationservice.domain.exception;
 
 import org.springframework.web.client.HttpStatusCodeException;
 

@@ -1,4 +1,4 @@
-package com.fp.accommodationservice.dto.request;
+package com.fp.accommodationservice.domain.dto.request;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;

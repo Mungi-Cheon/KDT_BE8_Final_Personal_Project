@@ -1,6 +1,6 @@
-package com.fp.accommodationservice.dto.response;
+package com.fp.accommodationservice.domain.dto.response;
 
-import com.fp.accommodationservice.entity.Accommodation;
+import com.fp.accommodationservice.domain.entity.Accommodation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

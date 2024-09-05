@@ -1,4 +1,4 @@
-package com.fp.accommodationservice.entity.type;
+package com.fp.accommodationservice.domain.entity.type;
 
 import java.util.Arrays;
 import lombok.AllArgsConstructor;

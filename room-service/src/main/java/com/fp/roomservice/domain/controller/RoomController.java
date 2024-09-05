@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/accommodation/{accommodationId}/rooms")
+@RequestMapping("/api/accommodation/{accommodationId}")
 public class RoomController {
 
     private final RoomService roomService;
 
-    @GetMapping
+    @GetMapping("/rooms")
     public ResponseEntity<RoomListResponse> getRoomList(
         @PathVariable Long accommodationId,
         @RequestParam(required = false) LocalDate checkInDate,
@@ -35,8 +35,21 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/room-details")
+    public ResponseEntity<List<RoomDetailResponse>> getRoomDetailList(
+        @PathVariable Long accommodationId,
+        @RequestParam(required = false) LocalDate checkInDate,
+        @RequestParam(required = false) LocalDate checkOutDate,
+        @RequestParam(defaultValue = "2") int personNumber
+    ) {
 
-    @GetMapping("/{roomId}")
+        List<RoomDetailResponse> response = roomService.getRoomDetailList(accommodationId,
+            checkInDate, checkOutDate, personNumber);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/rooms/{roomId}")
     public ResponseEntity<RoomDetailResponse> getRoomDetail(
         @PathVariable Long accommodationId,
         @PathVariable Long roomId,
@@ -59,7 +72,7 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{roomId}/images")
+    @GetMapping("/rooms/{roomId}/images")
     public ResponseEntity<RoomImageResponse> getRoomImagesByRoomIds(
         @PathVariable Long accommodationId, @PathVariable Long roomId) {
         RoomImageResponse response = roomService.findRoomImagesByRoomId(accommodationId, roomId);

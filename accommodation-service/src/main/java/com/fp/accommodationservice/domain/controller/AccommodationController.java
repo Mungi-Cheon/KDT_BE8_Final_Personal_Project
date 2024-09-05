@@ -1,10 +1,10 @@
-package com.fp.accommodationservice.controller;
+package com.fp.accommodationservice.domain.controller;
 
-import com.fp.accommodationservice.dto.request.AccommodationRequest;
-import com.fp.accommodationservice.dto.response.AccommodationResponse;
-import com.fp.accommodationservice.dto.response.AccommodationDetailResponse;
-import com.fp.accommodationservice.entity.type.Category;
-import com.fp.accommodationservice.service.AccommodationService;
+import com.fp.accommodationservice.domain.dto.request.AccommodationRequest;
+import com.fp.accommodationservice.domain.dto.response.AccommodationResponse;
+import com.fp.accommodationservice.domain.entity.type.Category;
+import com.fp.accommodationservice.domain.dto.response.AccommodationDetailResponse;
+import com.fp.accommodationservice.domain.service.AccommodationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

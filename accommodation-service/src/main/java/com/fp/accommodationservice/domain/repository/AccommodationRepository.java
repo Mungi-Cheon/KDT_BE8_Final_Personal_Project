@@ -1,6 +1,6 @@
-package com.fp.accommodationservice.repository;
+package com.fp.accommodationservice.domain.repository;
 
-import com.fp.accommodationservice.entity.Accommodation;
+import com.fp.accommodationservice.domain.entity.Accommodation;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

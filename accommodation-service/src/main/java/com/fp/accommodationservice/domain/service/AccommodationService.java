@@ -1,13 +1,17 @@
-package com.fp.accommodationservice.service;
+package com.fp.accommodationservice.domain.service;
 
-import com.fp.accommodationservice.dto.response.AccommodationDetailResponse;
-import com.fp.accommodationservice.dto.response.AccommodationResponse;
-import com.fp.accommodationservice.entity.Accommodation;
-import com.fp.accommodationservice.entity.AccommodationImage;
-import com.fp.accommodationservice.exception.AccommodationException;
-import com.fp.accommodationservice.exception.ErrorType;
-import com.fp.accommodationservice.repository.AccommodationImageRepository;
-import com.fp.accommodationservice.repository.AccommodationRepository;
+import static com.fp.accommodationservice.domain.entity.type.RoomType.STANDARD;
+
+import com.fp.accommodationservice.domain.dto.response.AccommodationResponse;
+import com.fp.accommodationservice.domain.exception.ErrorType;
+import com.fp.accommodationservice.domain.repository.AccommodationImageRepository;
+import com.fp.accommodationservice.domain.dto.response.AccommodationDetailResponse;
+import com.fp.accommodationservice.domain.entity.Accommodation;
+import com.fp.accommodationservice.domain.entity.AccommodationImage;
+import com.fp.accommodationservice.domain.exception.AccommodationException;
+import com.fp.accommodationservice.domain.repository.AccommodationRepository;
+import com.fp.accommodationservice.feign.client.RoomClient;
+import com.fp.accommodationservice.feign.dto.response.room.RoomDetailResponse;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +24,9 @@ public class AccommodationService {
 
     private final AccommodationRepository accommodationRepository;
     private final AccommodationImageRepository accommodationImageRepository;
+    private final RoomClient roomClient;
     private static final int PAGE_SIZE = 8;
 
-    //    @Cacheable(value = "accommodations", keyGenerator = "customKeyGenerator")
     @Transactional(readOnly = true)
     public List<AccommodationResponse> getAvailableAccommodations(
         String category, LocalDate checkIn, LocalDate checkOut, int personNumber,
@@ -33,6 +37,7 @@ public class AccommodationService {
         validPersonNumber(personNumber);
 
         List<Accommodation> accommodations = findAccommodations(category, lastAccommodationId);
+
         List<Accommodation> validAccommodations = accommodations.stream()
             .filter(accommodation
                 -> hasValidRooms(accommodation, checkInDate, checkOutDate, personNumber))
@@ -45,17 +50,12 @@ public class AccommodationService {
 
         return validAccommodations.stream()
             .map(accommodation -> {
-
-                // TODO kafka 이벤트 통신 accommodation service <--> room service
-//                int price = roomRepository.findAllByAccommodationId(accommodation.getId()).stream()
-//                    .filter(room -> STANDARD.getName().equalsIgnoreCase(room.getType()))
-//                    .flatMap(
-//                        room -> findRoomBetweenDates(room.getId(), checkInDate,
-//                            checkOutDate).stream())
-//                    .mapToInt(RoomInfo::getPrice)
-//                    .findFirst()
-//                    .orElse(0);
-                int price = 0;
+                int price = roomClient.getRoomDetailList(
+                        accommodation.getId(), checkInDate, checkOutDate, personNumber).stream()
+                    .filter(room -> STANDARD.getName().equalsIgnoreCase(room.getType()))
+                    .mapToInt(RoomDetailResponse::getPrice)
+                    .findFirst()
+                    .orElse(0);
                 String imageUrl = accommodationImageRepository
                     .findByAccommodationId(accommodation.getId()).get(0).getImageUrl();
 
@@ -91,29 +91,14 @@ public class AccommodationService {
         }
     }
 
-    private boolean hasValidRooms(Accommodation accommodation, LocalDate checkIn,
-        LocalDate checkOut, Integer personNumber) {
-        // TODO kafka 이벤트 통신 accommodation service <--> room service
-//        List<Room> roomEntityList = roomRepository.findAllByAccommodationId(
-//            accommodation.getId());
-//        return roomEntityList.stream()
-//            .filter(room -> room.getMaximumNumber() >= personNumber)
-//            .anyMatch(room -> areAllDatesAvailable(room.getId(), checkIn, checkOut));
-        return true;
+    private boolean hasValidRooms(Accommodation accommodation, LocalDate checkInDate,
+        LocalDate checkOutDate, Integer personNumber) {
+        List<RoomDetailResponse> roomEntityList = roomClient.getRoomDetailList(
+            accommodation.getId(), checkInDate, checkOutDate, personNumber);
+
+        return roomEntityList.stream()
+            .anyMatch(room -> room.getRoomCount() > 0);
     }
-
-//    private boolean areAllDatesAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
-//        List<RoomInfo> perNights = findRoomBetweenDates(roomId, checkIn, checkOut);
-//
-//        return perNights.stream()
-//            .allMatch(perNight -> perNight.getCount() > 0);
-//    }
-
-//    private List<RoomInfo> findRoomBetweenDates(Long roomId, LocalDate checkIn,
-//        LocalDate checkOut) {
-//        // TODO kafka 이벤트 통신 accommodation service <--> room service
-//        return roomInfoRepository.findByRoomIdAndDateRange(roomId, checkIn, checkOut);
-//    }
 
     private LocalDate validCheckInDate(LocalDate checkIn) {
         return checkIn == null ? LocalDate.now() : checkIn;
