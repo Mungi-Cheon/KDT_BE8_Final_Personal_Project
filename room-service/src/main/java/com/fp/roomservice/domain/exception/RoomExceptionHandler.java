@@ -1,15 +1,15 @@
 package com.fp.roomservice.domain.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpStatusCodeException;
 
-@Profile("adsfdsafasd")
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.fp.roomservice.domain")
+@Order(value = 1)
 public class RoomExceptionHandler {
 
     private final String LOG_TYPE_WARN = "WARN";

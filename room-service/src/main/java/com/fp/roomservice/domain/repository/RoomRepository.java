@@ -1,7 +1,7 @@
 package com.fp.roomservice.domain.repository;
 
 import com.fp.roomservice.domain.entity.Room;
-import com.fp.roomservice.domain.exception.ErrorType;
+import com.fp.roomservice.global.exception.type.RoomErrorType;
 import com.fp.roomservice.domain.exception.RoomException;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +34,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     default Room getByAccommodationIdAndRoomIdJoinImagesAndOption(
         Long accommodationId, Long roomId) {
         return findByAccommodationIdAndRoomIdJoinImagesAndOption(accommodationId, roomId)
-            .orElseThrow(() -> new RoomException(ErrorType.NOT_FOUND));
+            .orElseThrow(() -> new RoomException(RoomErrorType.NOT_FOUND));
     }
 }
