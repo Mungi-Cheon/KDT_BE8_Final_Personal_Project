@@ -1,5 +1,6 @@
 package com.fp.reservationservice.domain.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fp.reservationservice.domain.dto.request.ReservationCancelRequest;
 import com.fp.reservationservice.domain.dto.request.ReservationRequest;
 import com.fp.reservationservice.domain.dto.response.ReservationCancelResponse;
@@ -35,7 +36,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> reservation(
         @RequestHeader("member-id") Long memberId,
-        @Valid @RequestBody ReservationRequest request) {
+        @Valid @RequestBody ReservationRequest request) throws JsonProcessingException {
         ReservationResponse response = reservationService
             .reserve(request, memberId);
         return ResponseEntity.ok(response);
@@ -43,7 +44,8 @@ public class ReservationController {
 
     @DeleteMapping
     public ResponseEntity<ReservationCancelResponse> reservationCancel(
-        @RequestHeader("member-id") Long memberId, @RequestBody ReservationCancelRequest request) {
+        @RequestHeader("member-id") Long memberId, @RequestBody ReservationCancelRequest request)
+        throws JsonProcessingException {
         ReservationCancelResponse response = reservationService
             .cancelReservation(memberId, request);
         return ResponseEntity.ok(response);

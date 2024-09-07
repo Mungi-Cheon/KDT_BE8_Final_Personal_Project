@@ -1,7 +1,10 @@
 package com.fp.reservationservice.domain.entity;
 
 
+import com.fp.reservationservice.global.kafka.dto.ReservationStatus;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -47,4 +50,7 @@ public class Reservation {
     private Integer standardNumber;
 
     private Integer maximumNumber;
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
 }
