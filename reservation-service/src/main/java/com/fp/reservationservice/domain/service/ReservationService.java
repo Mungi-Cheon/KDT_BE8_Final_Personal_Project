@@ -1,5 +1,6 @@
 package com.fp.reservationservice.domain.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fp.reservationservice.domain.dto.request.ReservationCancelRequest;
 import com.fp.reservationservice.domain.dto.request.ReservationRequest;
 import com.fp.reservationservice.domain.dto.response.ReservationCancelResponse;
@@ -15,6 +16,8 @@ import com.fp.reservationservice.global.feign.client.RoomClient;
 import com.fp.reservationservice.global.feign.dto.response.accommodation.AccommodationDetailResponse;
 import com.fp.reservationservice.global.feign.dto.response.room.RoomDetailResponse;
 import com.fp.reservationservice.global.feign.dto.response.room.RoomImageResponse;
+import com.fp.reservationservice.global.kafka.client.ReservationProducer;
+import com.fp.reservationservice.global.kafka.dto.ReservationStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -22,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final AccommodationClient accommodationClient;
     private final RoomClient roomClient;
+    private final ReservationProducer reservationProducer;
 
     @Transactional(readOnly = true)
     public ReservationHistoryListResponse getReservationHistories(Long memberId) {
@@ -50,10 +53,9 @@ public class ReservationService {
             .build();
     }
 
-    @CacheEvict(value = "accommodations", allEntries = true)
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public ReservationResponse reserve(ReservationRequest request,
-        Long memberId) {
+        Long memberId) throws JsonProcessingException {
         LocalDate checkInDate = request.getCheckInDate();
         LocalDate checkOutDate = request.getCheckOutDate();
         int nights = calcNight(checkInDate, checkOutDate);
@@ -72,8 +74,6 @@ public class ReservationService {
             request.getRoomId(), checkInDate, checkOutDate,
             request.getPersonNumber());
 
-        // TODO : kafka 예약 이벤트 발행 -> room service 이벤트 구독
-
         Reservation reservation = createReservation(
             memberId, request.getAccommodationId(),
             request.getRoomId(), accommodation.getName(),
@@ -83,8 +83,11 @@ public class ReservationService {
             room.getType(), room.getStandardNumber(),
             room.getMaximumNumber()
         );
-
         Reservation saved = reservationRepository.save(reservation);
+
+        reservationProducer.sendReservation(saved.getId(), request.getRoomId(), checkInDate,
+            checkOutDate);
+
         return ReservationResponse.from(saved);
     }
 
@@ -109,17 +112,20 @@ public class ReservationService {
             .roomType(roomType)
             .standardNumber(standardNumber)
             .maximumNumber(maximumNumber)
+            .status(ReservationStatus.PENDING)
             .build();
     }
 
     @Transactional()
     public ReservationCancelResponse cancelReservation(
-        Long memberId, ReservationCancelRequest request) {
+        Long memberId, ReservationCancelRequest request) throws JsonProcessingException {
         Reservation reservation = reservationRepository
             .getReservationByIdAndMemberId(request.getId(), memberId);
 
         reservationRepository.delete(reservation);
-        reservationRepository.flush();
+
+        reservationProducer.sendCancelReservation(reservation.getId(), reservation.getRoomId(),
+            reservation.getCheckInDate(), reservation.getCheckOutDate());
 
         return ReservationCancelResponse.from(
             reservation,
