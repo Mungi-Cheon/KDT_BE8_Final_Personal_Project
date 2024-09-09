@@ -26,7 +26,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -53,7 +52,7 @@ public class ReservationService {
             .build();
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional
     public ReservationResponse reserve(ReservationRequest request,
         Long memberId) throws JsonProcessingException {
         LocalDate checkInDate = request.getCheckInDate();
