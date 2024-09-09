@@ -2,7 +2,6 @@ package com.fp.reservationservice.global.kafka.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fp.reservationservice.global.kafka.dto.ReservationCancelMessage;
 import com.fp.reservationservice.global.kafka.dto.ReservationMessage;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class ReservationProducer {
     public void sendCancelReservation(final Long reservationId, final Long roomId,
         final LocalDate checkIn,
         final LocalDate checkOut) throws JsonProcessingException {
-        final ReservationCancelMessage message = new ReservationCancelMessage(reservationId, roomId,
+        final ReservationMessage message = new ReservationMessage(reservationId, roomId,
             checkIn,
             checkOut);
         kafkaTemplate.send(CANCEL_TOPIC, objectMapper.writeValueAsString(message));
