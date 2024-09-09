@@ -180,6 +180,16 @@ public class RoomService {
 
     @Transactional
     @RedissonLock(key = "'reservation_' + #roomId + '_' + #checkIn + '_' + #checkOut")
+    public void increaseCountByOne(Long roomId, LocalDate checkIn, LocalDate checkOut) {
+        List<RoomInfo> roomInfoList = findRoomInfoList(roomId, checkIn, checkOut);
+
+        for (RoomInfo roomInfo : roomInfoList) {
+            roomInfo.increaseCountByOne();
+        }
+    }
+
+    @Transactional
+    @RedissonLock(key = "'reservation_' + #roomId + '_' + #checkIn + '_' + #checkOut")
     public void decreaseCountByOne(Long roomId, LocalDate checkIn, LocalDate checkOut) {
 
         List<RoomInfo> roomInfoList = findRoomInfoList(roomId, checkIn, checkOut);
