@@ -23,7 +23,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         + "WHERE r.memberId = :memberId "
         + "AND r.roomId = :productId "
         + "AND :checkInDate <= r.checkInDate "
-        + "AND :checkOutDate >= r.checkOutDate")
+        + "AND :checkOutDate >= r.checkOutDate "
+        + "AND r.status <> 'FAILURE' "
+        + "AND r.status <> 'CANCEL'")
     List<Reservation> findAlreadyReservation(
         @Param("memberId") Long memberId,
         @Param("productId") Long productId,

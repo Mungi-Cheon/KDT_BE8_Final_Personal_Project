@@ -122,8 +122,6 @@ public class ReservationService {
         Reservation reservation = reservationRepository
             .getReservationByIdAndMemberId(request.getId(), memberId);
 
-        reservationRepository.delete(reservation);
-
         reservationProducer.sendCancelReservation(reservation.getId(), reservation.getRoomId(),
             reservation.getCheckInDate(), reservation.getCheckOutDate());
 
