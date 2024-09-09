@@ -34,4 +34,8 @@ public class RoomInfo {
     public void decreaseCountByOne() {
         this.count--;
     }
+
+    public void increaseCountByOne() {
+        this.count++;
+    }
 }
