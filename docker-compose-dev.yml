@@ -1,24 +1,44 @@
-services:
-  app:
-    image: mgcheon/final-room:latest
-    container_name: room-service
-    env_file:
-      - /home/room-service/.env  # .env 파일에서 환경 변수를 로드
-    ports:
-      - 8085:8085
-    networks:
-      - service-network
-    depends_on:
-      - redis  # Redis 서비스가 먼저 실행되도록 설정
-
-  redis:
-    image: redis:latest
-    container_name: room-redis
-    ports:
-      - 6380:6380
-    networks:
-      - service-network
-
-networks:
-  service-network:
-    driver: bridge
+#services:
+#  db:
+#    image: mysql:8.0.36
+#    command:
+#      - --lower_case_table_names=1
+#      - --character-set-server=utf8mb4
+#      - --collation-server=utf8mb4_unicode_ci
+#    container_name: mysql
+#    environment:
+#      - MYSQL_DATABASE= ${DB_USERNAME}
+#      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+#    ports:
+#      - ${DB_PORT}
+#    volumes: #데이터 저장
+#      - mysql-data:/var/lib/mysql
+#
+#  redis:
+#    image: redis:latest
+#    container_name: redis
+#    ports:
+#      - ${REDIS_PORT}
+#    volumes:
+#      - redis-data:/data
+#
+#  zookeeper:
+#    image: wurstmeister/zookeeper
+#    container_name: zookeeper
+#    ports:
+#      - ${ZOOKEEPER_PORT}
+#  kafka:
+#    image: wurstmeister/kafka
+#    container_name: kafka
+#    ports:
+#      - ${KAFKA_PORT}
+#    environment:
+#      KAFKA_ADVERTISED_HOST_NAME: ${KAFKA_HOST}
+#      KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_CONNECT_URL} # kafka가 zookeeper에 커넥션하기 위한 대상을 지정
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#
+#volumes:
+#  app-data:
+#  mysql-data:
+#  redis-data:
