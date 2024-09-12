@@ -9,12 +9,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // security & jwt
-//    implementation 'org.springframework.security:spring-security-core'
-//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
-//    implementation 'com.auth0:java-jwt:4.4.0'
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
-//    testImplementation 'org.springframework.security:spring-security-test'
+    // kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 
     // spring cloud config
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
@@ -22,14 +19,17 @@ dependencies {
     // spring cloud eureka
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
+    // spring cloud openfeign client
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     // db
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     // redis
-//    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-//    implementation 'org.redisson:redisson-spring-boot-starter:3.31.0'
-//    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.31.0'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 tasks.named('test') {

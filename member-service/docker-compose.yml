@@ -1,0 +1,22 @@
+services:
+  app:
+    image: mgcheon/final-member:latest
+    container_name: member-service
+    env_file:
+      - /home/member-service/.env  # .env 파일에서 환경 변수를 로드
+    ports:
+      - 8082:8082
+    networks:
+      - service-network
+
+  redis:
+    image: redis:latest
+    container_name: member-redis
+    ports:
+      - 6379:6379
+    networks:
+      - service-network
+
+networks:
+  service-network:
+    driver: bridge
