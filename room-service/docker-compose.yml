@@ -13,7 +13,7 @@ services:
     image: redis:latest
     container_name: room-redis
     ports:
-      - 6380:6380
+      - 6380:6379
     networks:
       - service-network
 
