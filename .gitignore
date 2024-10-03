@@ -4,6 +4,9 @@
 ### MD ###
 HELP.md
 
+### DOCKER ###
+docker-compose-dev.yml
+
 ### Java ###
 # Compiled class file
 *.class
