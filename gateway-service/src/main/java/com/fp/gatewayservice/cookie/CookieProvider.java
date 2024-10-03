@@ -13,7 +13,7 @@ public class CookieProvider {
             return null;
         }
         return cookies.get(TokenType.ACCESS.getName()).stream().map(HttpCookie::getValue)
-            .findFirst()
+            .findAny()
             .orElse(null);
     }
 }
