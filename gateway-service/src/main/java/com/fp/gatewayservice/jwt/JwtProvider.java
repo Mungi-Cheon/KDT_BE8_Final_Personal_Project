@@ -47,6 +47,15 @@ public class JwtProvider {
                  SignatureException | IllegalArgumentException ex) {
             throw new AuthException(ErrorType.TOKEN_AUTHORIZATION_FAIL);
         }
+
+        validateTokenExpired(token, type);
+    }
+
+    private void validateTokenExpired(String token, TokenType type) {
+        Date expiredDate = getExpired(token, type);
+        if (expiredDate.before(new Date())) {
+            throw new AuthException(ErrorType.TOKEN_EXPIRED);
+        }
     }
 
     public Date getExpired(String token, TokenType type) {
