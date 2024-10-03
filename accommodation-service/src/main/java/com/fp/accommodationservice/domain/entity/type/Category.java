@@ -3,7 +3,7 @@ package com.fp.accommodationservice.domain.entity.type;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 @Getter
 @AllArgsConstructor
